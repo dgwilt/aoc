@@ -7,8 +7,7 @@ class AocDay4(AocDay):
 
     def parser(self,data):
         grid = data.splitlines()
-        xdim,ydim = len(grid[0]),len(grid)
-        return set((x,y) for x,y in product(range(xdim),range(ydim)) 
+        return set((x,y) for x,y in product(range(len(grid[0])),range(len(grid))) 
                    if grid[y][x] == "@")
 
     def accessible(self,paper):
