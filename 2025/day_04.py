@@ -5,7 +5,7 @@ from aoc import AocDay
 
 class AocDay4(AocDay):
 
-    def parser(self,data):
+    def paper(self,data):
         grid = data.splitlines()
         return set((x,y) for x,y in product(range(len(grid[0])),range(len(grid))) 
                    if grid[y][x] == "@")
@@ -16,12 +16,11 @@ class AocDay4(AocDay):
                           for dx,dy in self.deltas8) < 4)
 
     def run_silver(self,data):
-        paper = self.parser(data)
+        paper = self.paper(data)
         return len(self.accessible(paper))
         
     def run_gold(self,data):
-        paper = self.parser(data)
-        start = len(paper)
+        start = len(paper := self.paper(data))
         while (access := self.accessible(paper)):
             paper -= access
         return start - len(paper)
