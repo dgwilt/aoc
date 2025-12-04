@@ -7,22 +7,11 @@ class AocDay4(AocDay):
 
     def parser(self,data):
         grid = data.splitlines()
-        xdim = len(grid[0])
-        ydim = len(grid)
-        paper = {(x,y):grid[y][x] for x,y in product(range(xdim),range(ydim)) if grid[y][x] == "@"}
-        return paper
+        xdim,ydim = len(grid[0]),len(grid)
+        return set((x,y) for x,y in product(range(xdim),range(ydim)) if grid[y][x] == "@")
 
     def accessible(self,paper):
-        access = []
-        for (x0,y0) in paper:
-            adjacent = 0
-            for dx,dy in self.deltas8:
-                if (dx,dy) == (0,0): continue
-                if paper.get((x0+dx,y0+dy),"") == "@":
-                    adjacent += 1
-            if adjacent < 4:
-                access.append((x0,y0))
-        return access
+        return set((x0,y0) for (x0,y0) in paper if sum((x0+dx,y0+dy) in paper for dx,dy in self.deltas8) < 4)
 
     def run_silver(self,data):
         paper = self.parser(data)
@@ -30,13 +19,10 @@ class AocDay4(AocDay):
         
     def run_gold(self,data):
         paper = self.parser(data)
-        total_removed = 0
-        while True:
-            access = self.accessible(paper)
-            if (remove := len(access)) == 0: return total_removed
-            total_removed += remove
-            for roll in access:
-                del paper[roll]
+        start = len(paper)
+        while (access := self.accessible(paper)):
+            paper -= access
+        return start - len(paper)
 
 if __name__ == "__main__":
 
