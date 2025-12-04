@@ -8,10 +8,13 @@ class AocDay4(AocDay):
     def parser(self,data):
         grid = data.splitlines()
         xdim,ydim = len(grid[0]),len(grid)
-        return set((x,y) for x,y in product(range(xdim),range(ydim)) if grid[y][x] == "@")
+        return set((x,y) for x,y in product(range(xdim),range(ydim)) 
+                   if grid[y][x] == "@")
 
     def accessible(self,paper):
-        return set((x0,y0) for (x0,y0) in paper if sum((x0+dx,y0+dy) in paper for dx,dy in self.deltas8) < 4)
+        return set((x0,y0) for (x0,y0) in paper 
+                   if sum((x0+dx,y0+dy) in paper 
+                          for dx,dy in self.deltas8) < 4)
 
     def run_silver(self,data):
         paper = self.parser(data)
