@@ -10,14 +10,13 @@ class AocDay4(AocDay):
         return set((x,y) for x,y in product(range(len(grid[0])),range(len(grid))) 
                    if grid[y][x] == "@")
 
+    adjacent = lambda self, p, paper: sum((p[0]+dx,p[1]+dy) in paper for dx,dy in self.deltas8)
+
     def accessible(self,paper):
-        return set((x0,y0) for (x0,y0) in paper 
-                   if sum((x0+dx,y0+dy) in paper 
-                          for dx,dy in self.deltas8) < 4)
+        return set(p for p in paper if self.adjacent(p,paper) < 4)
 
     def run_silver(self,data):
-        paper = self.paper(data)
-        return len(self.accessible(paper))
+        return len(self.accessible(self.paper(data)))
         
     def run_gold(self,data):
         start = len(paper := self.paper(data))
