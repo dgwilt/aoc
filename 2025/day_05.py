@@ -4,18 +4,18 @@ from aoc import AocDay
 
 class AocDay5(AocDay):
 
-    def parser(self,data):
+    def parser(data):
         ranges,ingredients = data.split("\n\n")
         fresh = [[int(i) for i in r.split("-")] for r in ranges.splitlines()]
         ingredients = [int(i) for i in ingredients.splitlines()]
         return fresh,ingredients
 
     def run_silver(self,data):
-        fresh,ingredients = self.parser(data)
+        fresh,ingredients = AocDay5.parser(data)
         return sum(any(mn <= i <= mx for mn,mx in fresh) for i in ingredients)
         
     def run_gold(self,data):
-        fresh,_ = self.parser(data)
+        fresh,_ = AocDay5.parser(data)
         fresh.sort()
         merged_fresh = []
         cur_mn,cur_mx = fresh[0]

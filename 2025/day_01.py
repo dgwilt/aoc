@@ -5,8 +5,7 @@ from math import copysign
 
 class AocDay1(AocDay):
 
-    def parser(data):
-        return [int(line.replace("L","-").replace("R","")) for line in data.splitlines()]
+    parser = lambda data : [int(line.replace("L","-").replace("R","")) for line in data.splitlines()]
         
     def run_silver(self,data):
         arrow,zeroes = 50,0

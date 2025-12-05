@@ -5,18 +5,16 @@ from re import compile
 
 class AocDay2(AocDay):
 
-    def find_invalid(self,data,invalid):
+    def find_invalid(data,invalid):
         answer = 0
         for ids in data.split(","):
             fr,to = [int(i) for i in ids.split("-")]
             answer += sum(id for id in range(fr,to+1) if invalid.match(str(id)))
         return answer
 
-    def run_silver(self,data):
-        return self.find_invalid(data,compile(r'\A(\d+)\1\Z'))
-        
-    def run_gold(self,data):
-        return self.find_invalid(data,compile(r'\A(\d+)(\1)+\Z'))
+    run_silver = lambda _,data : AocDay2.find_invalid(data,compile(r'\A(\d+)\1\Z'))
+
+    run_gold = lambda _,data : AocDay2.find_invalid(data,compile(r'\A(\d+)(\1)+\Z'))
 
 if __name__ == "__main__":
 

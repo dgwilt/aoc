@@ -4,7 +4,7 @@ from aoc import AocDay
 
 class AocDay3(AocDay):
 
-    def line_joltage(self,line,numdigits):
+    def line_joltage(line,numdigits):
         end, joltage, fr = len(line) + 1, 0, 0
         for to in range(end-numdigits,end):
             max = "0"
@@ -15,15 +15,12 @@ class AocDay3(AocDay):
             joltage = joltage * 10 + int(max)
         return joltage
 
-    def joltage(self,data,numdigits):
-        return sum(self.line_joltage(line,numdigits) for line in data.splitlines())
+    joltage = lambda data,numdigits : sum(AocDay3.line_joltage(line,numdigits) for line in data.splitlines())
 
-    def run_silver(self,data):
-        return self.joltage(data,2)
+    run_silver = lambda _,data : AocDay3.joltage(data,2)
+
+    run_gold = lambda _,data : AocDay3.joltage(data,12)
         
-    def run_gold(self,data):
-        return self.joltage(data,12)
-
 if __name__ == "__main__":
 
     silver_tests = ["""987654321111111

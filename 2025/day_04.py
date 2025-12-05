@@ -5,21 +5,19 @@ from aoc import AocDay
 
 class AocDay4(AocDay):
 
-    def paper(self,data):
+    def paper(data):
         grid = data.splitlines()
         return set((x,y) for x,y in product(range(len(grid[0])),range(len(grid))) 
                    if grid[y][x] == "@")
 
-    adjacent = lambda self, p, paper: sum((p[0]+dx,p[1]+dy) in paper for dx,dy in self.deltas8)
+    adjacent = lambda self, p, paper : sum((p[0]+dx,p[1]+dy) in paper for dx,dy in self.deltas8)
 
-    def accessible(self,paper):
-        return set(p for p in paper if self.adjacent(p,paper) < 4)
+    accessible = lambda self,paper : set(p for p in paper if self.adjacent(p,paper) < 4)
 
-    def run_silver(self,data):
-        return len(self.accessible(self.paper(data)))
+    run_silver = lambda self,data : len(self.accessible(AocDay4.paper(data)))
         
     def run_gold(self,data):
-        start = len(paper := self.paper(data))
+        start = len(paper := AocDay4.paper(data))
         while (access := self.accessible(paper)):
             paper -= access
         return start - len(paper)
