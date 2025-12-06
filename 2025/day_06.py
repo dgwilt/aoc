@@ -7,15 +7,15 @@ class AocDay6(AocDay):
 
     def run_silver(self,data):
         ops = {"+":sum, "*":prod}
-        grid = [row.split() for row in data.splitlines()]
-        return sum(ops[row[0]]([int(i) for i in row[1:]]) for row in list(zip(*grid[::-1])))
+        rows = [row.split() for row in data.splitlines()]
+        return sum(ops[row[0]]([int(i) for i in row[1:]]) for row in list(zip(*rows[::-1])))
         
     def run_gold(self,data):
         ops = {"+":sum, "*":prod}
-        grid = [list(row) + [" "] for row in data.splitlines()]
+        rows = [list(row) + [" "] for row in data.splitlines()]
         total = 0
         op,nums = "",[]
-        for col in list(zip(*grid[::-1])):
+        for col in list(zip(*rows[::-1])):
             if op == "": op = col[0]
             if all(d == " " for d in col):
                 total += ops[op](nums)
