@@ -21,7 +21,7 @@ class AocDay6(AocDay):
                 total += ops[op](nums)
                 op,nums = "",[]
             else:
-                nums.append(int("".join(col[-1:0:-1]).strip()))
+                nums.append(int("".join(col[-1:0:-1])))
         return total
 
 if __name__ == "__main__":
