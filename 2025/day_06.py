@@ -13,7 +13,7 @@ class AocDay6(AocDay):
         
     def run_gold(self,data):
         rows = [[" "] + list(row) for row in data.splitlines()][:-1]
-        fns = [AocDay6.ops[i] for i in data.splitlines()[-1].split()]
+        fns = [AocDay6.ops[op] for op in data.splitlines()[-1].split()]
         total, nums = 0, []
         for num in ["".join(col).strip() for col in list(zip(*rows))[::-1]]:
             if num:
