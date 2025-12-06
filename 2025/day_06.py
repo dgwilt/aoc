@@ -5,23 +5,22 @@ from math import prod
 
 class AocDay6(AocDay):
 
-    def run_silver(self,data):
-        ops = {"+":sum, "*":prod}
+    ops = {"+":sum, "*":prod}
+
+    def run_silver(self,data):        
         rows = [row.split() for row in data.splitlines()]
-        return sum(ops[row[0]]([int(i) for i in row[1:]]) for row in list(zip(*rows[::-1])))
+        return sum(AocDay6.ops[row[0]]([int(i) for i in row[1:]]) for row in list(zip(*rows[::-1])))
         
     def run_gold(self,data):
-        ops = {"+":sum, "*":prod}
-        rows = [list(row) + [" "] for row in data.splitlines()]
-        total = 0
-        op,nums = "",[]
-        for col in list(zip(*rows[::-1])):
-            if op == "": op = col[0]
-            if all(d == " " for d in col):
-                total += ops[op](nums)
-                op,nums = "",[]
+        rows = [[" "] + list(row) for row in data.splitlines()][:-1]
+        fns = [AocDay6.ops[i] for i in data.splitlines()[-1].split()]
+        total, nums = 0, []
+        for num in ["".join(col).strip() for col in list(zip(*rows))[::-1]]:
+            if num:
+                nums.append(int(num))
             else:
-                nums.append(int("".join(col[-1:0:-1])))
+                total += fns.pop()(nums)
+                nums = []
         return total
 
 if __name__ == "__main__":
