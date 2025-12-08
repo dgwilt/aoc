@@ -6,12 +6,15 @@ from aoc import AocDay
 
 class AocDay7(AocDay):
 
-    def run_silver(self,data):
+    def parse(data):
         grid = data.splitlines()
-        beams = set([grid[0].index("S")])
         splitters = set((x,y) for x,y in product(range(len(grid[0])),range(len(grid))) if grid[y][x] == "^")
-        splits = 0
-        for y in range(1,len(grid)):
+        return splitters,len(grid),grid[0].index("S")
+
+    def run_silver(self,data):
+        splitters,ydim,bx = AocDay7.parse(data)
+        beams,splits = set([bx]), 0
+        for y in range(1,ydim):
             nextbeams = set()
             for bx in beams:
                 if (bx,y) in splitters:
@@ -24,10 +27,9 @@ class AocDay7(AocDay):
         return splits
         
     def run_gold(self,data):
-        grid = data.splitlines()
-        beams = {grid[0].index("S"):1}
-        splitters = set((x,y) for x,y in product(range(len(grid[0])),range(len(grid))) if grid[y][x] == "^")
-        for y in range(1,len(grid)):
+        splitters,ydim,bx = AocDay7.parse(data)
+        beams = {bx:1}
+        for y in range(1,ydim):
             nextbeams = defaultdict(int)
             for bx,count in beams.items():
                 if (bx,y) in splitters:
