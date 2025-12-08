@@ -27,22 +27,16 @@ class AocDay7(AocDay):
         grid = data.splitlines()
         beams = {grid[0].index("S"):1}
         splitters = set((x,y) for x,y in product(range(len(grid[0])),range(len(grid))) if grid[y][x] == "^")
-        splits = defaultdict(int)
         for y in range(1,len(grid)):
             nextbeams = defaultdict(int)
             for bx,count in beams.items():
                 if (bx,y) in splitters:
-                    splits[y] += count
                     nextbeams[bx-1] += count
                     nextbeams[bx+1] += count
                 else:
                     nextbeams[bx] += count
             beams = nextbeams
-
-        timelines = {0:1}
-        for y in range(1,len(grid)):
-            timelines[y] = (2 * splits[y]) + (timelines[y-1] - splits[y])
-        return timelines[len(grid)-1]
+        return sum(beams.values())
 
 if __name__ == "__main__":
 
