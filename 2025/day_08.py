@@ -11,7 +11,7 @@ class AocDay8(AocDay):
     
     def distances(data):
         boxes = [tuple(int(i) for i in line.split(",")) for line in data.splitlines()]
-        return {AocDay8.dist(a,b) : (a,b) for a,b in combinations(boxes,2)}, len(boxes)
+        return sorted((AocDay8.dist(a,b),(a,b)) for a,b in combinations(boxes,2)), len(boxes)
 
     def add_to_circuits(circuits,a,b):
         c1 = set()
@@ -36,8 +36,7 @@ class AocDay8(AocDay):
         distances,_ = AocDay8.distances(data)
 
         circuits = []
-        for d in sorted(distances.keys())[:1000]:
-            a,b = distances[d]
+        for _,(a,b) in distances[:1000]:
             AocDay8.add_to_circuits(circuits,a,b)
                 
         return prod(sorted([len(c) for c in circuits])[-3:])
@@ -46,8 +45,7 @@ class AocDay8(AocDay):
         distances,target = AocDay8.distances(data)
 
         circuits = []
-        for d in sorted(distances.keys()):
-            a,b = distances[d]
+        for _,(a,b) in distances:
             if AocDay8.add_to_circuits(circuits,a,b) == target:
                 return a[0] * b[0]
 
