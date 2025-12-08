@@ -12,8 +12,8 @@ class AocDay7(AocDay):
         return splitters,len(grid),grid[0].index("S")
 
     def run_silver(self,data):
-        splitters,ydim,bx = AocDay7.parse(data)
-        beams,splits = set([bx]), 0
+        splitters,ydim,start = AocDay7.parse(data)
+        beams,splits = set([start]), 0
         for y in range(1,ydim):
             nextbeams = set()
             for bx in beams:
@@ -27,8 +27,8 @@ class AocDay7(AocDay):
         return splits
         
     def run_gold(self,data):
-        splitters,ydim,bx = AocDay7.parse(data)
-        beams = {bx:1}
+        splitters,ydim,start = AocDay7.parse(data)
+        beams = {start:1}
         for y in range(1,ydim):
             nextbeams = defaultdict(int)
             for bx,count in beams.items():
