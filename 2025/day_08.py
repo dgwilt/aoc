@@ -13,8 +13,7 @@ class AocDay8(AocDay):
         return sorted((AocDay8.dist(a,b),(a,b)) for a,b in combinations(boxes,2)), len(boxes)
 
     def add_to_circuits(circuits,a,b):
-        ca = set()
-        cb = set()
+        ca, cb = set(), set()
         for c in circuits:
             if not ca and a in c: ca = c
             if not cb and b in c: cb = c

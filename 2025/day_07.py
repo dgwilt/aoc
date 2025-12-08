@@ -6,7 +6,7 @@ from aoc import AocDay
 
 class AocDay7(AocDay):
 
-    def run_sim(data):
+    def run_sim(data,isGold = False):
         grid = data.splitlines()
         splitters = set((x,y) for x,y in product(range(len(grid[0])),range(len(grid))) if grid[y][x] == "^")
         beams,splits = {grid[0].index("S"):1}, 0
@@ -20,11 +20,11 @@ class AocDay7(AocDay):
                 else:
                     nextbeams[bx] += count
             beams = nextbeams
-        return {"SILVER":splits,"GOLD":sum(beams.values())}
+        return sum(beams.values()) if isGold else splits
 
-    run_silver = lambda _,data : AocDay7.run_sim(data)["SILVER"]
+    run_silver = lambda _,data : AocDay7.run_sim(data)
 
-    run_gold = lambda _,data : AocDay7.run_sim(data)["GOLD"]
+    run_gold = lambda _,data : AocDay7.run_sim(data,isGold=True)
 
 if __name__ == "__main__":
 
