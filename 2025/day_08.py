@@ -14,23 +14,23 @@ class AocDay8(AocDay):
         return sorted((AocDay8.dist(a,b),(a,b)) for a,b in combinations(boxes,2)), len(boxes)
 
     def add_to_circuits(circuits,a,b):
-        c1 = set()
-        c2 = set()
+        ca = set()
+        cb = set()
         for c in circuits:
-            if a in c: c1 = c
-            if b in c: c2 = c
+            if not ca and a in c: ca = c
+            if not cb and b in c: cb = c
         
-        if not c1 and not c2:
+        if not ca and not cb:
             circuits.append(set([a,b]))
-        elif c1 and not c2:
-            c1.add(b)
-        elif c2 and not c1:
-            c2.add(a)
-        elif c1 != c2:
-            circuits.remove(c1)
-            c2.update(c1)
+        elif ca and not cb:
+            ca.add(b)
+        elif cb and not ca:
+            cb.add(a)
+        elif ca != cb:
+            circuits.remove(ca)
+            cb.update(ca)
         
-        return max(len(c1),len(c2))
+        return max(len(ca),len(cb))
 
     def run_silver(self,data):
         distances,_ = AocDay8.distances(data)
