@@ -24,12 +24,13 @@ class AocDay9(AocDay):
         if by1 == by2 and ax1 == ax2:
             (ax1, ay1, ax2, ay2), (bx1, by1, bx2, by2) = (bx1, by1, bx2, by2), (ax1, ay1, ax2, ay2)
         elif ay1 != ay2 or bx1 != bx2:
+            # Lines are parallel
             return False
 
-        x_low, x_high = sorted((ax1, ax2))
-        y_low, y_high = sorted((by1, by2))
+        x_min, x_max = sorted((ax1, ax2))
+        y_min, y_max = sorted((by1, by2))
 
-        return (x_low < bx1 < x_high) and (y_low < ay1 < y_high)
+        return (x_min < bx1 < x_max) and (y_min < ay1 < y_max)
 
     def point_inside_poly(pt,poly):
         x,y = pt
@@ -38,9 +39,9 @@ class AocDay9(AocDay):
             (x1,y1),(x2,y2) = poly[i-1],poly[i]
             if y1 == y2: continue # Skip horizontal edges
             # Standard ray-casting condition
-            if ((y1 <= y < y2) or (y2 <= y < y1)):
+            if (y1 < y < y2) or (y2 < y < y1):
                 x_intersect = x1 + (y - y1) * (x2 - x1) / (y2 - y1)
-                if x_intersect >= x:
+                if x_intersect > x:
                     inside = not inside
 
         return inside
