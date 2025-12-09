@@ -3,6 +3,8 @@ from itertools import combinations
 from sys import argv
 from aoc import AocDay
 
+SMALL = 0.25
+
 class AocDay9(AocDay):
 
     def run_silver(self,data):
@@ -49,10 +51,10 @@ class AocDay9(AocDay):
         return inside
 
     inside_corners = lambda x_min, y_min, x_max, y_max : [
-        (x_min+0.25, y_min+0.25), # bottom left
-        (x_max-0.25, y_min+0.25), # bottom right
-        (x_min+0.25, y_max-0.25), # top left
-        (x_max-0.25, y_max-0.25), # top right
+        (x_min+SMALL, y_min+SMALL), # bottom left
+        (x_max-SMALL, y_min+SMALL), # bottom right
+        (x_min+SMALL, y_max-SMALL), # top left
+        (x_max-SMALL, y_max-SMALL), # top right
     ]        
 
     edges = lambda x_min, y_min, x_max, y_max: [
@@ -91,7 +93,6 @@ class AocDay9(AocDay):
                     max_area = area
 
         return max_area
-
 
 if __name__ == "__main__":
 
