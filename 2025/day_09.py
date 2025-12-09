@@ -14,6 +14,7 @@ class AocDay9(AocDay):
             result = max(result,w*h)
         return result
 
+    @staticmethod
     def lines_intersect(a1,a2,b1,b2):
 
         ax1, ay1 = a1
@@ -32,6 +33,7 @@ class AocDay9(AocDay):
 
         return (x_min < bx1 < x_max) and (y_min < ay1 < y_max)
 
+    @staticmethod
     def point_inside_poly(pt,poly):
         x,y = pt
         inside = False
@@ -60,6 +62,7 @@ class AocDay9(AocDay):
         ((x_min, y_max), (x_min, y_min)),  # left
     ]
 
+    @staticmethod
     def rect_inside_poly(rect,poly):        
 
         if any(not AocDay9.point_inside_poly(p,poly) for p in AocDay9.inside_corners(*rect)):
