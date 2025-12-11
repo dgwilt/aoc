@@ -43,21 +43,17 @@ class AocDay10(AocDay):
             _,buttons,target = AocDay10.parser(line)
 
             prob = LpProblem()
-            b_vars = [LpVariable(f"b{n}", lowBound=0, cat="Integer") for n in range(len(buttons))]
+            bn = [LpVariable(f"b{n}", lowBound=0, cat="Integer") for n in range(len(buttons))]
 
             # Constraints: for each position i, the sum of presses of buttons that affect i must equal target[i]
             for i, val in enumerate(target):
                 affecting = [j for j, btn in enumerate(buttons) if i in btn]
-                prob += lpSum(b_vars[j] for j in affecting) == val
-
-            # Objective: minimise the total number of button presses
-            prob += lpSum(b_vars)
-
-            # Solve the ILP
+                prob += lpSum(bn[j] for j in affecting) == val
+            
+            prob += lpSum(bn) # Objective: minimise the total number of button presses
             prob.solve(PULP_CBC_CMD(msg=False))
 
-            # Total presses for this line (sum of variable values)
-            total += int(sum(value(v) for v in b_vars))
+            total += int(sum(value(v) for v in bn))
         return total
 
 if __name__ == "__main__":
