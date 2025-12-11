@@ -7,6 +7,14 @@ from pulp import LpProblem, LpVariable, lpSum, PULP_CBC_CMD, value, LpInteger
 
 class AocDay10(AocDay):
 
+    def parser(data):
+        for line in data.splitlines():
+            lights,buttons,joltages = match(r'\[([\.#]+)\]([\d\s\(\),]+)\{([\d,]+)\}',line).groups()
+            lights = AocDay10.bool_list_to_int([l == "#" for l in lights])
+            joltages = tuple(int(i) for i in joltages.split(","))
+            buttons = [[int(i) for i in b.strip()[1:-1].split(",")] for b in buttons.split()]
+            yield lights,buttons,joltages
+
     def search(target,buttons):
         todo = deque([(0,0)])
         visited = set()
@@ -20,35 +28,22 @@ class AocDay10(AocDay):
 
     bool_list_to_int = lambda b : sum(2**i for i,bit in enumerate(b) if bit)
 
-    def parser(line):
-        lights,buttons,joltages = match(r'\[([\.#]+)\]([\d\s\(\),]+)\{([\d,]+)\}',line).groups()
-        lights = AocDay10.bool_list_to_int([l == "#" for l in lights])
-        joltages = tuple(int(i) for i in joltages.split(","))
-        buttons = [[int(i) for i in b.strip()[1:-1].split(",")] for b in buttons.split()]
-        return lights,buttons,joltages
-
-    def run_silver(self,data):
-        total = 0
-        for line in data.splitlines():
-            lights,buttons,_ = AocDay10.parser(line)
-            buttons = [AocDay10.bool_list_to_int([i in b for i in range(10)]) for b in buttons]
-            total += AocDay10.search(lights,buttons)
-        return total
+    run_silver = lambda _,data : sum(AocDay10.search(lights,[AocDay10.bool_list_to_int([i in b for i in range(10)]) for b in buttons])
+                                     for lights,buttons,_ in AocDay10.parser(data))
         
-    def run_gold(self,data):
-        total = 0
-        for line in data.splitlines():
-            _,buttons,joltages = AocDay10.parser(line)
-            b_vars = [LpVariable(f"b{n}", lowBound=0, cat=LpInteger) for n in range(len(buttons))]
+    def solve(buttons,joltages):
+        b_vars = [LpVariable(f"b{n}", lowBound=0, cat=LpInteger) for n in range(len(buttons))]
 
-            prob = LpProblem()
-            prob += lpSum(b_vars) # Objective: minimise the total number of button presses
-            for j_idx, joltage in enumerate(joltages):
-                prob += lpSum(b_vars[b_idx] for b_idx, j_idxs in enumerate(buttons) if j_idx in j_idxs) == joltage
-            
-            prob.solve(PULP_CBC_CMD(msg=False))
-            total += sum(map(value,b_vars))
-        return int(total)
+        prob = LpProblem()
+        prob += lpSum(b_vars) # Objective: minimise the total number of button presses
+        for j_idx, joltage in enumerate(joltages):
+            prob += lpSum(b_vars[b_idx] for b_idx, j_idxs in enumerate(buttons) if j_idx in j_idxs) == joltage
+        
+        prob.solve(PULP_CBC_CMD(msg=False))
+        return int(sum(map(value,b_vars)))
+
+    run_gold = lambda _,data : sum(AocDay10.solve(buttons,joltages)
+                                   for _,buttons,joltages in AocDay10.parser(data))
 
 if __name__ == "__main__":
 
