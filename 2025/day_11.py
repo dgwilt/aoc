@@ -35,7 +35,8 @@ class AocDay11(AocDay):
         G, reverse_topo = AocDay11.make_graph(data)
         return sum(prod(
             AocDay11.count_simple_paths(G,reverse_topo,route[i],route[i+1]) 
-            for i in range(len(route)-1)) for route in (("svr","dac","fft","out"),("svr","fft","dac","out")))
+            for i in range(len(route)-1)) for route in (("svr","dac","fft","out"),
+                                                        ("svr","fft","dac","out")))
     
 if __name__ == "__main__":
 
