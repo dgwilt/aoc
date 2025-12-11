@@ -18,43 +18,37 @@ class AocDay10(AocDay):
             for b in buttons:
                 todo.append((cur^b,depth+1))
 
-    def bool_list_to_int(b):
-        return sum(2**i for i,bit in enumerate(b) if bit)
+    bool_list_to_int = lambda b : sum(2**i for i,bit in enumerate(b) if bit)
 
     def parser(line):
-        m = match(r'\[([\.#]+)\]([\d\s\(\),]+)\{([\d,]+)\}',line)
-        lights,buttons,joltage = m.groups()
+        lights,buttons,joltages = match(r'\[([\.#]+)\]([\d\s\(\),]+)\{([\d,]+)\}',line).groups()
         lights = AocDay10.bool_list_to_int([l == "#" for l in lights])
-        joltage = tuple(int(i) for i in joltage.split(","))
+        joltages = tuple(int(i) for i in joltages.split(","))
         buttons = [[int(i) for i in b.strip()[1:-1].split(",")] for b in buttons.split()]
-        return lights,buttons,joltage
+        return lights,buttons,joltages
 
     def run_silver(self,data):
         total = 0
         for line in data.splitlines():
-            target,buttons,_ = AocDay10.parser(line)
+            lights,buttons,_ = AocDay10.parser(line)
             buttons = [AocDay10.bool_list_to_int([i in b for i in range(10)]) for b in buttons]
-            total += AocDay10.search(target,buttons)
+            total += AocDay10.search(lights,buttons)
         return total
         
     def run_gold(self,data):
         total = 0
         for line in data.splitlines():
-            _,buttons,target = AocDay10.parser(line)
+            _,buttons,joltages = AocDay10.parser(line)
+            b_vars = [LpVariable(f"b{n}", lowBound=0, cat="Integer") for n in range(len(buttons))]
 
             prob = LpProblem()
-            bn = [LpVariable(f"b{n}", lowBound=0, cat="Integer") for n in range(len(buttons))]
-
-            # Constraints: for each position i, the sum of presses of buttons that affect i must equal target[i]
-            for i, val in enumerate(target):
-                affecting = [j for j, btn in enumerate(buttons) if i in btn]
-                prob += lpSum(bn[j] for j in affecting) == val
+            prob += lpSum(b_vars) # Objective: minimise the total number of button presses
+            for j_idx, joltage in enumerate(joltages):
+                prob += lpSum(b_vars[b_idx] for b_idx, j_idxs in enumerate(buttons) if j_idx in j_idxs) == joltage
             
-            prob += lpSum(bn) # Objective: minimise the total number of button presses
             prob.solve(PULP_CBC_CMD(msg=False))
-
-            total += int(sum(value(v) for v in bn))
-        return total
+            total += sum(map(value,b_vars))
+        return int(total)
 
 if __name__ == "__main__":
 
