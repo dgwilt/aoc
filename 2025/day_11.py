@@ -24,8 +24,8 @@ class AocDay11(AocDay):
         for node in reverse_topo:
             for nbr in G.neighbors(node):
                 count[node] += count[nbr]
-
-        return count[source]
+            if node == source:
+                return count[source]
 
     def run_silver(self,data):
         G, reverse_topo = AocDay11.make_graph(data)
