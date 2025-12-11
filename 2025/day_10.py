@@ -35,7 +35,7 @@ class AocDay10(AocDay):
         b_vars = [LpVariable(f"b{n}", lowBound=0, cat=LpInteger) for n in range(len(buttons))]
 
         prob = LpProblem()
-        prob += lpSum(b_vars) # Objective: minimise the total number of button presses
+        prob += lpSum(b_vars) # Minimise the total number of button presses
         for j_idx, joltage in enumerate(joltages):
             prob += lpSum(b_vars[b_idx] for b_idx, j_idxs in enumerate(buttons) if j_idx in j_idxs) == joltage
         
