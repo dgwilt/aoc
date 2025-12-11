@@ -3,7 +3,7 @@ from sys import argv
 from aoc import AocDay
 from re import match
 from collections import deque
-from pulp import LpProblem, LpVariable, lpSum, PULP_CBC_CMD, value
+from pulp import LpProblem, LpVariable, lpSum, PULP_CBC_CMD, value, LpInteger
 
 class AocDay10(AocDay):
 
@@ -39,7 +39,7 @@ class AocDay10(AocDay):
         total = 0
         for line in data.splitlines():
             _,buttons,joltages = AocDay10.parser(line)
-            b_vars = [LpVariable(f"b{n}", lowBound=0, cat="Integer") for n in range(len(buttons))]
+            b_vars = [LpVariable(f"b{n}", lowBound=0, cat=LpInteger) for n in range(len(buttons))]
 
             prob = LpProblem()
             prob += lpSum(b_vars) # Objective: minimise the total number of button presses
