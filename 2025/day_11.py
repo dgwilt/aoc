@@ -9,12 +9,9 @@ class AocDay11(AocDay):
 
     @staticmethod
     def make_graph(data):
-        G = nx.DiGraph()
-        for line in data.splitlines():
-            fr, tos = line.split(": ")
-            for to in tos.split():
-                G.add_edge(fr,to)
-        return G, list(nx.topological_sort(G))[::-1]
+        return (G := nx.DiGraph((fr, to) for line in data.splitlines()
+                    for fr, tos in [line.split(": ")]
+                    for to in tos.split())), list(nx.topological_sort(G))[::-1]
 
     @staticmethod
     def count_simple_paths(G, reverse_topo, source, target):
