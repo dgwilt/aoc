@@ -37,7 +37,7 @@ class AocDay12(AocDay):
         return tuple(seen)
 
     @lru_cache(maxsize=None)
-    def placement_masks_for_shape(W, H, variants):
+    def placement_masks_for_shape(W,H,variants):
         # For each variant (a tuple of (x,y) cells normalised to (0,0)), generate all placements as bitmasks.
         # Bit index = y*W + x.
         masks = []
@@ -53,29 +53,28 @@ class AocDay12(AocDay):
         return masks
 
     @staticmethod
-    def dfs(occupied, remaining, masks_by_shape):
+    def dfs(occupied,remaining,masks_by_shape):
         if not remaining:
             return True
 
         for i in remaining:
             for m in masks_by_shape[i]:
-                if (m & occupied) == 0:
+                if (occupied & m) == 0:
                     next_remaining = {k:(v-1 if k == i else v) for k,v in remaining.items() if v > (1 if k == i else 0)}
-                    if AocDay12.dfs(occupied | m, next_remaining, masks_by_shape):
+                    if AocDay12.dfs(occupied | m,next_remaining,masks_by_shape):
                         return True
         return False
 
     @staticmethod
-    def can_pack_region(W, H, variants_by_shape, counts):
+    def can_pack_region(W,H,variants_by_shape,remaining):
 
-        if sum(c * len(variants_by_shape[i][0]) for i, c in enumerate(counts)) > W * H:
+        if sum(c * len(variants_by_shape[i][0]) for i, c in remaining.items()) > W * H:
             return False
 
         masks_by_shape = [AocDay12.placement_masks_for_shape(W, H, v) for v in variants_by_shape]
-        remaining = {i: c for i,c in enumerate(counts) if c > 0}
         return AocDay12.dfs(0,remaining, masks_by_shape)
 
-    def run_silver(self, data):
+    def run_silver(self,data):
         variants_by_shape = []
         answer = 0
         for block in data.strip().split("\n\n"):
@@ -87,8 +86,9 @@ class AocDay12(AocDay):
                 for line in block.splitlines():
                     dims, counts = line.split(": ")
                     w, h = (int(i) for i in dims.split("x"))
-                    counts = [int(i) for i in counts.split()]
-                    answer += 1 if AocDay12.can_pack_region(w, h, variants_by_shape, counts) else 0
+                    remaining = {i: c for i,c in enumerate([int(n) for n in counts.split()]) if c > 0}
+
+                    answer += 1 if AocDay12.can_pack_region(w, h, variants_by_shape, remaining) else 0
 
         return answer
 
