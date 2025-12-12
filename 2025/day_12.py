@@ -6,9 +6,8 @@ from re import match
 from functools import lru_cache, reduce
 from operator import or_
 
-SIDE = 3
-
 class AocDay12(AocDay):
+    SIDE = 3
 
     @staticmethod
     def normalise(cells):
@@ -38,7 +37,7 @@ class AocDay12(AocDay):
     def placement_masks_for_shape(W,H,variants):
         return [reduce(or_,[1 << (((y0 + y) * W) + (x0 + x)) for x,y in shape])
                 for shape in variants
-                for x0,y0 in product(range(W - SIDE + 1),range(H - SIDE + 1))]
+                for x0,y0 in product(range(W - AocDay12.SIDE + 1),range(H - AocDay12.SIDE + 1))]
 
     @staticmethod
     def dfs(occupied,remaining,masks_by_shape):
@@ -61,7 +60,7 @@ class AocDay12(AocDay):
         for block in data.strip().split("\n\n"):
             if match(r"\A\d+:", block.strip()):
                 shape = block.splitlines()[1:]
-                cells = [(x, y) for x,y in product(range(SIDE),range(SIDE)) if shape[y][x] == "#"]
+                cells = [(x, y) for x,y in product(range(AocDay12.SIDE),range(AocDay12.SIDE)) if shape[y][x] == "#"]
                 variants_by_shape.append(AocDay12.all_variants(cells))
             else:
                 for line in block.splitlines():
