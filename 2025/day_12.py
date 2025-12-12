@@ -3,19 +3,17 @@ from itertools import product
 from sys import argv
 from aoc import AocDay
 from re import match
-from math import inf
-from functools import lru_cache
+from functools import lru_cache, reduce
+from operator import or_
 
 SIDE = 3
-X = 0
-Y = 1
 
 class AocDay12(AocDay):
 
     @staticmethod
     def normalise(cells):
-        minx = min(c[X] for c in cells)
-        miny = min(c[Y] for c in cells)
+        minx = min(c[0] for c in cells)
+        miny = min(c[1] for c in cells)
         return tuple(sorted((x - minx, y - miny) for x, y in cells))
 
     @staticmethod
@@ -38,30 +36,21 @@ class AocDay12(AocDay):
 
     @lru_cache(maxsize=None)
     def placement_masks_for_shape(W,H,variants):
-        # For each variant (a tuple of (x,y) cells normalised to (0,0)), generate all placements as bitmasks.
-        # Bit index = y*W + x.
-        masks = []
-        for shape in variants:
-            vw, vh = max(c[X] for c in shape) + 1, max(c[Y] for c in shape) + 1
-            for ty in range(H - vh + 1):
-                row_base = ty * W
-                for tx in range(W - vw + 1):
-                    m = 0
-                    for x, y in shape:
-                        m |= 1 << (row_base + (y * W) + (tx + x))
-                    masks.append(m)
-        return masks
+        return [reduce(or_,[1 << (row_base + (y * W) + (x0 + x)) for x,y in shape])
+                for shape in variants
+                for row_base in range(0,W*(H - SIDE + 1),W)
+                for x0 in range(W - SIDE + 1)]
 
     @staticmethod
     def dfs(occupied,remaining,masks_by_shape):
         if not remaining:
             return True
 
-        for i in remaining:
-            for m in masks_by_shape[i]:
-                if (occupied & m) == 0:
-                    next_remaining = {k:(v-1 if k == i else v) for k,v in remaining.items() if v > (1 if k == i else 0)}
-                    if AocDay12.dfs(occupied | m,next_remaining,masks_by_shape):
+        for s_idx in remaining:
+            for shape_bitmask in masks_by_shape[s_idx]:
+                if (occupied & shape_bitmask) == 0:
+                    next_remaining = {k:(v-1 if k == s_idx else v) for k,v in remaining.items() if v > (1 if k == s_idx else 0)}
+                    if AocDay12.dfs(occupied | shape_bitmask,next_remaining,masks_by_shape):
                         return True
         return False
 
