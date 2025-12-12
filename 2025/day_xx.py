@@ -2,7 +2,8 @@
 from itertools import combinations, product
 from collections import defaultdict
 from sys import argv
-from aoc import AocDay, prod
+from aoc import AocDay
+from math import prod
 
 class AocDayX(AocDay):
 

@@ -3,22 +3,9 @@ from sys import version
 from collections import defaultdict
 from itertools import product
 from re import compile
-from math import gcd
+from math import gcd, prod
 
 sortstr = lambda s: "".join(sorted(list(s)))
-
-# Yuck! My work laptop is 3.7 and my home laptop is 3.8
-if version.startswith("3.8"):
-    # Python 3.8
-    import math
-    def prod(nums):
-        return math.prod(nums)
-else:
-    # Pre-Python 3.8
-    def prod(nums):
-        from functools import reduce
-        from operator import mul
-        return reduce(mul,nums)
 
 def lcm(nums):
     result = 1
