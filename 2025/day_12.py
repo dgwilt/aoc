@@ -44,9 +44,9 @@ class AocDay12(AocDay):
     def dfs(occupied,remaining,masks_by_shape):
         for s_idx in remaining:
             for shape_bitmask in masks_by_shape[s_idx]:
-                if (occupied & shape_bitmask) == 0:
-                    next_remaining = {k:(v-1 if k == s_idx else v) for k,v in remaining.items() if v > (1 if k == s_idx else 0)}
-                    if not next_remaining or AocDay12.dfs(occupied | shape_bitmask,next_remaining,masks_by_shape):
+                if (occupied & shape_bitmask == 0 and 
+                    (not (next_remaining := {k:(v-1 if k == s_idx else v) for k,v in remaining.items() if v > (1 if k == s_idx else 0)}) 
+                        or AocDay12.dfs(occupied | shape_bitmask,next_remaining,masks_by_shape))):
                         return True
         return False
 
