@@ -4,6 +4,7 @@ from sys import argv
 from aoc import AocDay
 from re import match
 from math import inf
+from functools import lru_cache
 
 SIDE = 3
 X = 0
@@ -35,7 +36,7 @@ class AocDay12(AocDay):
 
         return tuple(seen)
 
-    @staticmethod
+    @lru_cache(maxsize=None)
     def placement_masks_for_shape(W, H, variants):
         # For each variant (a tuple of (x,y) cells normalised to (0,0)), generate all placements as bitmasks.
         # Bit index = y*W + x.
