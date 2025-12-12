@@ -53,29 +53,17 @@ class AocDay12(AocDay):
         return masks
 
     @staticmethod
-    def search(occ_mask, remaining, masks_by_shape):
+    def dfs(occupied, remaining, masks_by_shape):
         if not remaining:
             return True
 
-        # Choose the shape with the fewest currently valid placements
-        best_i = None
-        best_opts = None
-        best_len = inf
-
         for i in remaining:
-            opts = [m for m in masks_by_shape[i] if (m & occ_mask) == 0]
-
-            if not (l := len(opts)):
-                return False
-            if l < best_len:
-                best_len = l
-                best_i = i
-                best_opts = opts
-                if best_len == 1:
-                    break
-
-        next_remaining = {k:(v-1 if k == best_i else v) for k,v in remaining.items() if v > (1 if k == best_i else 0)}
-        return any(AocDay12.search(occ_mask | m, next_remaining, masks_by_shape) for m in best_opts)
+            for m in masks_by_shape[i]:
+                if (m & occupied) == 0:
+                    next_remaining = {k:(v-1 if k == i else v) for k,v in remaining.items() if v > (1 if k == i else 0)}
+                    if AocDay12.dfs(occupied | m, next_remaining, masks_by_shape):
+                        return True
+        return False
 
     @staticmethod
     def can_pack_region(W, H, variants_by_shape, counts):
@@ -85,7 +73,7 @@ class AocDay12(AocDay):
 
         masks_by_shape = [AocDay12.placement_masks_for_shape(W, H, v) for v in variants_by_shape]
         remaining = {i: c for i,c in enumerate(counts) if c > 0}
-        return AocDay12.search(0,remaining, masks_by_shape)
+        return AocDay12.dfs(0,remaining, masks_by_shape)
 
     def run_silver(self, data):
         variants_by_shape = []
