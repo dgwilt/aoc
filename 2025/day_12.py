@@ -36,10 +36,9 @@ class AocDay12(AocDay):
 
     @lru_cache(maxsize=None)
     def placement_masks_for_shape(W,H,variants):
-        return [reduce(or_,[1 << (row_base + (y * W) + (x0 + x)) for x,y in shape])
+        return [reduce(or_,[1 << (((y0 + y) * W) + (x0 + x)) for x,y in shape])
                 for shape in variants
-                for row_base in range(0,W*(H - SIDE + 1),W)
-                for x0 in range(W - SIDE + 1)]
+                for x0,y0 in product(range(W - SIDE + 1),range(H - SIDE + 1))]
 
     @staticmethod
     def dfs(occupied,remaining,masks_by_shape):
