@@ -55,12 +55,8 @@ class AocDay12(AocDay):
 
     @staticmethod
     def can_pack_region(W,H,variants_by_shape,remaining):
-
-        if sum(c * len(variants_by_shape[i][0]) for i, c in remaining.items()) > W * H:
-            return False
-
-        masks_by_shape = [AocDay12.placement_masks_for_shape(W, H, v) for v in variants_by_shape]
-        return AocDay12.dfs(0,remaining, masks_by_shape)
+        return (sum(c * len(variants_by_shape[i][0]) for i, c in remaining.items()) <= W * H and 
+                AocDay12.dfs(0,remaining, [AocDay12.placement_masks_for_shape(W, H, v) for v in variants_by_shape]))
 
     def run_silver(self,data):
         variants_by_shape = []
@@ -75,7 +71,6 @@ class AocDay12(AocDay):
                     dims, counts = line.split(": ")
                     w, h = (int(i) for i in dims.split("x"))
                     remaining = {i: c for i,c in enumerate([int(n) for n in counts.split()]) if c > 0}
-
                     answer += 1 if AocDay12.can_pack_region(w, h, variants_by_shape, remaining) else 0
 
         return answer
